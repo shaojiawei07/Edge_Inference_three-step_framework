@@ -27,9 +27,9 @@ CIFAR-10
 ```
 ### How to Run
 
-0. Pretrain a ResNet model from the scratch or download from [here](https://github.com/shaojiawei07/some_model)
-1. `model_pruning.py` uses magnitude-based pruning method to compress the on-device model with parameter `-sp1`, `-sp2`, `-sp3`, `-sp4`, and `-sp5` to denote the SParsity ratios in different building blocks. A pruned model is achieved named `sp1_xx_sp2_xx_sp3_xx_sp4_xx_test_acc_xxxx`.
-2. `feature_compression.py` compresses the intermediate feature, which loads the pruned model by `-load`, and select the split point by `-split`.
+0. Pretrain a ResNet model from the scratch or download from [here](https://github.com/shaojiawei07/some_model).
+1. `model_pruning.py` uses magnitude-based pruning method to compress the on-device model with parameter `-sp1`, `-sp2`, `-sp3`, `-sp4`, and `-sp5` to denote the SParsity ratios in different building blocks. The pruned model is named `sp1_xx_sp2_xx_sp3_xx_sp4_xx_test_acc_xxxx`.
+2. `feature_compression.py` compresses the intermediate feature, which loads the pruned model by `-load`, and selects the split point by `-split`.
 
 
 ## Citation
