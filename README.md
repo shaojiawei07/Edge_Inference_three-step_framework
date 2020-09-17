@@ -2,6 +2,12 @@
 This code is for the [paper](https://arxiv.org/abs/2006.02166): "communication-computation tradeoffs in resource-constrained edge inference".
 
 
+## Framework
+
+We propose a three-step framework to reduce the end-to-end latency in the edge inference. The structure is shown as following:
+
+![avatar](./Framework.png)
+
 ## Implementation
 
 The three-step framework is implemented based on the ResNet18. The network is splitted at the end of each building block.
