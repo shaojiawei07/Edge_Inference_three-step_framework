@@ -17,6 +17,7 @@ class Round(torch.autograd.Function):
         grad_input = grad_output.clone()
         return grad_input
 
+# map the float-point values to codewords
 class emb(torch.autograd.Function):
     @staticmethod
     def forward(ctx, input, embb):
@@ -36,7 +37,6 @@ class emb(torch.autograd.Function):
         grad_input = grad_output.clone()
         return grad_input, None
 
-
 class split_resnet1(nn.Module):
     def __init__(self,args):
         super().__init__()
@@ -55,7 +55,7 @@ class split_resnet1(nn.Module):
 
         self.elu = nn.ELU()
         self.Tanh = nn.Tanh()
-        self.weight = nn.Parameter(torch.rand(self.hidden_channel* 32 * 32 ,2**args.bit))
+
 
         for para in self.resnet.parameters():
             para.requires_grad = False
@@ -79,9 +79,7 @@ class split_resnet1(nn.Module):
         output = torch.reshape(output,(B,self.hidden_channel,32,32))
 
         output = self.elu(self.conv2(output))
-        
         output = self.resnet.conv2_x(output)
-
         output = self.resnet.conv3_x(output)
         output = self.resnet.conv4_x(output)
         output = self.resnet.conv5_x(output)
@@ -109,7 +107,6 @@ class split_resnet2(nn.Module):
 
         self.elu = nn.ELU()
         self.Tanh = nn.Tanh()
-        self.weight = nn.Parameter(torch.rand(self.hidden_channel,2**args.bit))
 
         for para in self.resnet.parameters():
             para.requires_grad = False
@@ -210,6 +207,8 @@ class split_resnet4(nn.Module):
 
         self.elu = nn.ELU()
         self.Tanh = nn.Tanh()
+
+        #learned codeword
         self.weight = nn.Parameter(torch.rand(self.hidden_channel,2**args.bit))
 
         self.batchnorm1 = nn.BatchNorm2d(8)
@@ -276,6 +275,8 @@ class split_resnet5(nn.Module):
 
         self.elu = nn.ELU()
         self.Tanh = nn.Tanh()
+
+        #learned codeword
         self.weight = nn.Parameter(torch.rand(self.hidden_channel,2**args.bit))
 
         for para in self.resnet.parameters():
