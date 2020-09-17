@@ -11,7 +11,7 @@ import argparse
 import resnet
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-epoch', type=int, default=500, help='epoch')
+parser.add_argument('-epoch', type=int, default=100, help='epoch')
 parser.add_argument('-batch', type=int, default=128, help='batch size')
 parser.add_argument('-lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('-sp1', type=float, default=0.0)
@@ -173,7 +173,7 @@ def test(epoch, prune_flag):
         torch.save({'epoch': epoch,
                     'model_state_dict': model.state_dict(),
                     'accuracy': (100 * correct / total)
-                    },'./Prune_model/sp1{:.2f}_sp2{:.2f}_sp3{:.2f}_sp4{:.2f}_test_acc{:.4f}'.format(args.sp1,args.sp2,args.sp3,args.sp4,(100 * correct / total)))
+                    },'./sp1_{:.2f}_sp2_{:.2f}_sp3_{:.2f}_sp4_{:.2f}_test_acc{:.4f}'.format(args.sp1,args.sp2,args.sp3,args.sp4,(100 * correct / total)))
 
         if (100 * correct / total) > 60:
                 pred_best = (100 * correct / total)
