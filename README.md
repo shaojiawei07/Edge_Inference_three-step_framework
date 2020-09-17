@@ -9,8 +9,9 @@ The three-step framework is implemented based on the ResNet18. The network is sp
 ### Dependency
 
 ```
-Pytorch 1.6.0
-Torchvision 0.7.0
+Pytorch 1.2.0
+Torchvision 0.4.0
+Numpy 1.6.12
 ```
 
 ### Dataset
