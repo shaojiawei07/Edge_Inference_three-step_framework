@@ -7,33 +7,14 @@ import torch.nn.functional as F
 
 
 class Round(torch.autograd.Function):
-    """
-    We can implement our own custom autograd Functions by subclassing
-    torch.autograd.Function and implementing the forward and backward passes
-    which operate on Tensors.
-    """
 
     @staticmethod
     def forward(ctx, input):
-        """
-        In the forward pass we receive a Tensor containing the input and return
-        a Tensor containing the output. ctx is a context object that can be used
-        to stash information for backward computation. You can cache arbitrary
-        objects for use in the backward pass using the ctx.save_for_backward method.
-        """
-        #ctx.save_for_backward(input)
         return torch.round(input)
 
     @staticmethod
     def backward(ctx, grad_output):
-        """
-        In the backward pass we receive a Tensor containing the gradient of the loss
-        with respect to the output, and we need to compute the gradient of the loss
-        with respect to the input.
-        """
-        #input, = ctx.saved_tensors
         grad_input = grad_output.clone()
-        #grad_input[input < 0] = 0
         return grad_input
 
 class emb(torch.autograd.Function):
@@ -44,14 +25,10 @@ class emb(torch.autograd.Function):
         emb_expanded = embb
         dist = torch.norm(x_expanded - emb_expanded, 2, 1)
         _, argmin = dist.min(-1)
-        #shifted_shape = [input.shape[0], *list(input.shape[2:]) ,input.shape[1]]
-        #result = emb.t().index_select(0, argmin.view(-1)).view(shifted_shape).permute(0, ctx.dims[-1], *ctx.dims[1:-1])
-
         emb_t = embb.t()
 
         x = emb_t[argmin,:]
 
-        #ctx.save_for_backward(argmin)
         return x,argmin
 
     @staticmethod
@@ -69,11 +46,6 @@ class split_resnet1(nn.Module):
         self.resnet = resnet.resnet18()
         model_dict = torch.load(args.load)
         self.resnet.load_state_dict(model_dict['model_state_dict'])
-
-        #self.encode1 = nn.Linear(32768*2 ,self.hidden_channel)
-        #self.encode2 = nn.Linear(self.hidden_channel,self.hidden_channel)
-        #self.decode1 = nn.Linear(self.hidden_channel,self.hidden_channel)
-        #self.decode2 = nn.Linear(self.hidden_channel,32768*2)
         
         self.conv1 = nn.Conv2d(64,self.hidden_channel,kernel_size = 3,stride=1,padding=1)
         #self.conv1_1 = nn.Conv2d(64,32,kernel_size = 3,stride=1,padding=1)
