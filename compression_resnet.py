@@ -94,10 +94,6 @@ class split_resnet1(nn.Module):
 
         B = output.size()[0]
         scale = self.scale
-        #print(output.size())
-        #output = torch.reshape(output,(B,-1))
-
-        #output = self.elu(self.encode1(output))
         output = self.Tanh(self.conv1(output))
 
         output_ori = torch.reshape(output,(B,-1))
@@ -107,39 +103,10 @@ class split_resnet1(nn.Module):
         output = (output * 2)/scale - 1
 
         regular_term = torch.norm(output-output_ori)**2 / B
-        
-        #output = torch.reshape(output,(B,-1))
-        
-        '''
-
-        output_tmp = output
-
-        if flag == 1:
-            output_emb, argmin = emb().apply(output, self.weight.detach())
-
-            #selected_emb = emb().apply(x.detach(), self.weight)
-
-            selected_emb = self.weight.t()[argmin.detach(),:]
-            regular_term = F.mse_loss(selected_emb,output_tmp.detach()) + 0.5 * F.mse_loss(selected_emb.detach(),output_tmp)
-
-        elif flag == 0:
-            output_emb = output_tmp
-            _, argmin = emb().apply(output, self.weight.detach())
-            selected_emb = self.weight.t()[argmin.detach(),:]
-            regular_term = F.mse_loss(selected_emb,output_tmp.detach())
-        
-
 
         output = torch.reshape(output,(B,self.hidden_channel,32,32))
-        '''
-        #emb().apply(output, self.weight.detach())
-        output = torch.reshape(output,(B,self.hidden_channel,32,32))
 
-
-        #output = self.elu(self.decode1(output))
         output = self.elu(self.conv2(output))
-
-        #output = torch.reshape(output,(B,64,32,32))
         
         output = self.resnet.conv2_x(output)
 
@@ -163,18 +130,8 @@ class split_resnet2(nn.Module):
         self.resnet.load_state_dict(model_dict['model_state_dict'])
         self.scale = 2 ** args.bit
         print('scale',self.scale,'bit',args.bit)
-
-        #self.encode1 = nn.Linear(32768*2 ,self.hidden_channel)
-        #self.encode2 = nn.Linear(self.hidden_channel,self.hidden_channel)
-        #self.decode1 = nn.Linear(self.hidden_channel,self.hidden_channel)
-        #self.decode2 = nn.Linear(self.hidden_channel,32768*2)
-
-        #self.enc_dec = nn.sequanen
-
-        #nn.BatchNorm2d
         
         self.conv1 = nn.Conv2d(64,self.hidden_channel,kernel_size = 3,stride=1,padding=1)
-        #self.conv1_1 = nn.Conv2d(64,32,kernel_size = 3,stride=1,padding=1)
         
         self.conv2 = nn.Conv2d(self.hidden_channel,64,kernel_size = 3,stride=1,padding=1)
 
@@ -191,12 +148,9 @@ class split_resnet2(nn.Module):
         output = self.resnet.conv2_x(output)
 
         B = output.size()[0]
-        #print(output.size())
-        scale = self.scale
-        #print(output.size())
-        #output = torch.reshape(output,(B,-1))
 
-        #output = self.elu(self.encode1(output))
+        scale = self.scale
+
         output = self.Tanh(self.conv1(output))
 
         output_ori = torch.reshape(output,(B,-1))
@@ -207,36 +161,6 @@ class split_resnet2(nn.Module):
 
         regular_term = torch.norm(output-output_ori)**2 / B
 
-
-        
-        #output = torch.reshape(output,(B,-1))
-        
-        '''
-
-        output_tmp = output
-
-        if flag == 1:
-            output_emb, argmin = emb().apply(output, self.weight.detach())
-
-            #selected_emb = emb().apply(x.detach(), self.weight)
-
-            selected_emb = self.weight.t()[argmin.detach(),:]
-            regular_term = F.mse_loss(selected_emb,output_tmp.detach()) + 0.5 * F.mse_loss(selected_emb.detach(),output_tmp)
-
-        elif flag == 0:
-            output_emb = output_tmp
-            _, argmin = emb().apply(output, self.weight.detach())
-            selected_emb = self.weight.t()[argmin.detach(),:]
-            regular_term = F.mse_loss(selected_emb,output_tmp.detach())
-        
-
-
-        output = torch.reshape(output,(B,self.hidden_channel,32,32))
-        '''
-        #emb().apply(output, self.weight.detach())
-
-
-        #output = self.elu(self.decode1(output))
         output = torch.reshape(output,(B,self.hidden_channel,32,32))
         output = self.elu(self.conv2(output))
 
@@ -262,34 +186,14 @@ class split_resnet3(nn.Module):
         
         
         self.conv1 = nn.Conv2d(128,self.hidden_channel,kernel_size = 3,stride=1,padding=1)
-        #self.conv1_1 = nn.Conv2d(self.hidden_channel,32,kernel_size = 3,stride=1,padding=1)
         
         self.conv2 = nn.Conv2d(self.hidden_channel,128,kernel_size = 3,stride=1,padding=1)
-        #self.conv2_1 = nn.Conv2d(32,64,kernel_size = 3,stride=1,padding=1)
-
-        
-        #self.encode1 = nn.Linear(int(32768/4),self.hidden_channel)
-        #self.encode2 = nn.Linear(self.hidden_channel,self.hidden_channel)
-        #self.decode1 = nn.Linear(self.hidden_channel,self.hidden_channel)
-        #self.decode2 = nn.Linear(self.hidden_channel,int(32768/4))
-        
-        #self.batchnorm1 = nn.BatchNorm2d(64)
-        #self.batchnorm2 = nn.BatchNorm2d(32)
-        #self.batchnorm3 = nn.BatchNorm2d(64)
-        #self.batchnorm4 = nn.BatchNorm2d(128)
-        
-        #self.dropout = torch.nn.Dropout(p=0.25)
 
         for para in self.resnet.parameters():
             para.requires_grad = False
 
-        #self.enc_dec = nn.sequanen
-
-        #nn.BatchNorm2d
-
         self.elu = nn.ELU()
         self.Tanh = nn.Tanh()
-        #self.weight = nn.Parameter(torch.rand(self.hidden_channel,2**args.bit))
 
 
     def forward(self, x, flag):
@@ -298,52 +202,13 @@ class split_resnet3(nn.Module):
         output = self.resnet.conv3_x(output)
 
         B = output.size()[0]
-        #print(output.size())
         scale = self.scale
-        #print(output.size())
-        #output = torch.reshape(output,(B,-1))
-
-        #output = self.elu(self.encode1(output))
         output = self.Tanh(self.conv1(output))
-
         output_ori = torch.reshape(output,(B,-1))
-
         output = Round().apply(scale*(output_ori + 1)/2.0)
-
         output = (output * 2)/scale - 1
-
         regular_term = torch.norm(output-output_ori)**2 / B
 
-
-        
-        #output = torch.reshape(output,(B,-1))
-        
-        '''
-
-        output_tmp = output
-
-        if flag == 1:
-            output_emb, argmin = emb().apply(output, self.weight.detach())
-
-            #selected_emb = emb().apply(x.detach(), self.weight)
-
-            selected_emb = self.weight.t()[argmin.detach(),:]
-            regular_term = F.mse_loss(selected_emb,output_tmp.detach()) + 0.5 * F.mse_loss(selected_emb.detach(),output_tmp)
-
-        elif flag == 0:
-            output_emb = output_tmp
-            _, argmin = emb().apply(output, self.weight.detach())
-            selected_emb = self.weight.t()[argmin.detach(),:]
-            regular_term = F.mse_loss(selected_emb,output_tmp.detach())
-        
-
-
-        output = torch.reshape(output,(B,self.hidden_channel,32,32))
-        '''
-        #emb().apply(output, self.weight.detach())
-
-
-        #output = self.elu(self.decode1(output))
         output = torch.reshape(output,(B,self.hidden_channel,16,16))
         output = self.elu(self.conv2(output))
 
@@ -371,15 +236,6 @@ class split_resnet4(nn.Module):
         self.decode2 = nn.Linear(self.hidden_channel,16384)
         self.dropout = torch.nn.Dropout(p = 0.25)
 
-        #self.conv1 = nn.Conv2d(256,8,kernel_size = 3,stride=1,padding=1)
-        #self.conv1_1 = nn.Conv2d(self.hidden_channel,32,kernel_size = 3,stride=1,padding=1)
-        
-        #self.conv2 = nn.Conv2d(8,256,kernel_size = 3,stride=1,padding=1)
-
-        #self.enc_dec = nn.sequanen
-
-        #nn.BatchNorm2d
-
         self.elu = nn.ELU()
         self.Tanh = nn.Tanh()
         self.weight = nn.Parameter(torch.rand(self.hidden_channel,2**args.bit))
@@ -397,7 +253,6 @@ class split_resnet4(nn.Module):
         output = self.resnet.conv4_x(output)
 
         B = output.size()[0]
-        #print(output.size())
         output = torch.reshape(output,(B,-1))
 
         output = self.elu(self.encode1(output))
@@ -411,8 +266,6 @@ class split_resnet4(nn.Module):
         if flag == 1:
             output_emb, argmin = emb().apply(output, self.weight.detach())
 
-            #selected_emb = emb().apply(x.detach(), self.weight)
-
             selected_emb = self.weight.t()[argmin.detach(),:]
             regular_term = F.mse_loss(selected_emb,output_tmp.detach()) + 0.5 * F.mse_loss(selected_emb.detach(),output_tmp)
 
@@ -421,10 +274,6 @@ class split_resnet4(nn.Module):
             _, argmin = emb().apply(output, self.weight.detach())
             selected_emb = self.weight.t()[argmin.detach(),:]
             regular_term = F.mse_loss(selected_emb,output_tmp.detach())
-
-
-        #emb().apply(output, self.weight.detach())
-
 
         output = self.elu(self.decode1(output))
         output = self.dropout(output)
@@ -450,8 +299,6 @@ class split_resnet5(nn.Module):
         self.resnet.load_state_dict(model_dict['model_state_dict'])
 
         self.encode1 = nn.Linear(512,self.hidden_channel)
-        #self.encode2 = nn.Linear(self.hidden_channel,self.hidden_channel)
-        #self.decode1 = nn.Linear(self.hidden_channel,self.hidden_channel)
         self.decode2 = nn.Linear(self.hidden_channel,512)
 
 
@@ -468,26 +315,17 @@ class split_resnet5(nn.Module):
         output = self.resnet.conv2_x(output)
         output = self.resnet.conv3_x(output)
         output = self.resnet.conv4_x(output)
-
         B = output.size()[0]
-        #print(output.size())
-        #output = torch.reshape(output,(B,-1))
-
-        #output = torch.reshape(output,(B,256,8,8))
-
         output = self.resnet.conv5_x(output)
         output = self.resnet.avg_pool(output)
         output = output.view(output.size(0), -1)
 
         output = self.Tanh(self.encode1(output))
-        #output = self.Tanh(self.encode2(output))
 
         output_tmp = output
 
         if flag == 1:
             output_emb, argmin = emb().apply(output, self.weight.detach())
-
-            #selected_emb = emb().apply(x.detach(), self.weight)
 
             selected_emb = self.weight.t()[argmin.detach(),:]
             regular_term = F.mse_loss(selected_emb,output_tmp.detach()) + 0.5 * F.mse_loss(selected_emb.detach(),output_tmp)
@@ -498,13 +336,6 @@ class split_resnet5(nn.Module):
             selected_emb = self.weight.t()[argmin.detach(),:]
             regular_term = F.mse_loss(selected_emb,output_tmp.detach())
 
-
-
-
-        #emb().apply(output, self.weight.detach())
-
-
-        #output = self.elu(self.decode1(output))
         output = self.elu(self.decode2(output))
 
         output = self.resnet.fc(output)
