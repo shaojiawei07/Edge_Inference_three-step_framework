@@ -13,7 +13,7 @@ import compression_resnet
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-hid_dim', type=int, default=32, help='lens of encoded vector')
+parser.add_argument('-hid_dim', type=int, default=32, help='dimension of encoded vector')
 parser.add_argument('-epoch', type=int, default=60, help='epoch')
 parser.add_argument('-batch', type=int, default=128, help='batch size')
 parser.add_argument('-lr', type=float, default=1e-4, help='leaerning rate')
