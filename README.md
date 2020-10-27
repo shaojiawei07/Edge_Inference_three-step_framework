@@ -4,13 +4,13 @@ This code is for the [paper](https://arxiv.org/abs/2006.02166): "communication-c
 
 ## Framework
 
-We propose a three-step framework to reduce the end-to-end latency in the edge inference. The structure is shown as following:
+We propose a three-step framework to reduce the end-to-end latency in the edge inference. The structure is shown as follows:
 
 ![avatar](./Framework.png)
 
 ## Implementation
 
-The three-step framework is implemented based on the ResNet18. The network is splitted at the end of each building block.
+The three-step framework is implemented based on ResNet18. The network is split at the end of each building block.
 
 ### Dependency
 
@@ -27,8 +27,8 @@ CIFAR-10
 ```
 ### How to Run
 
-0. Pretrain a ResNet model from the scratch or download from [here](https://github.com/shaojiawei07/some_model).
-1. `model_pruning.py` uses magnitude-based pruning method to compress the on-device model with parameter `-sp1`, `-sp2`, `-sp3`, `-sp4`, and `-sp5` to denote the SParsity ratios in different building blocks. The pruned model is named `sp1_xx_sp2_xx_sp3_xx_sp4_xx_test_acc_xxxx`.
+0. Pretrain a ResNet model from scratch or download from [here](https://github.com/shaojiawei07/some_model).
+1. `model_pruning.py` uses magnitude-based pruning method to compress the on-device model with parameter `-sp1`, `-sp2`, `-sp3`, `-sp4`, and `-sp5` to denote the Sparsity ratios in different building blocks. The pruned model is named `sp1_xx_sp2_xx_sp3_xx_sp4_xx_test_acc_xxxx`.
 2. `feature_compression.py` compresses the intermediate feature, which loads the pruned model by `-load`, and selects the split point by `-split`.
 
 
