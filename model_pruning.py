@@ -173,7 +173,7 @@ def test(epoch, prune_flag):
         torch.save({'epoch': epoch,
                     'model_state_dict': model.state_dict(),
                     'accuracy': (100 * correct / total)
-                    },'./sp1_{:.2f}_sp2_{:.2f}_sp3_{:.2f}_sp4_{:.2f}_test_acc{:.4f}'.format(args.sp1,args.sp2,args.sp3,args.sp4,(100 * correct / total)))
+                    },'./sp1_{:.2f}_sp2_{:.2f}_sp3_{:.2f}_sp4_{:.2f}_sp5_{:.2f}_test_acc{:.4f}'.format(args.sp1,args.sp2,args.sp3,args.sp4,args.sp5,(100 * correct / total)))
 
         if (100 * correct / total) > 60:
                 pred_best = (100 * correct / total)
