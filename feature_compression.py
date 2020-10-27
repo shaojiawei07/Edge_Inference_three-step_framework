@@ -76,8 +76,6 @@ def accuracy(output, labels):
 
 # Start training
 def train(model=model):
-
-    best_acc = 0.93
     
     flag = 0
 
@@ -115,13 +113,9 @@ def train(model=model):
             if (i+1) % int(50000/(args.batch*20)) == 0:
                 print ("Epoch[{}/{}], Step [{}/{}], Reconst Loss: {:.4f}, acc: {:.4f}" 
                        .format(epoch+1, num_epochs, i+1, len(data_loader), loss.item(), accuracy_result.item()))        
-        scheduler.step()        
         
-        if (epoch)%1 == 0:
-            output_flag = test(epoch)
-            if output_flag == 1:
-                print('finish')
-                break
+        scheduler.step()                
+        test(epoch)
             
             
         
@@ -146,14 +140,8 @@ def test(epoch):
             total += labels.size(0)
             correct_top5 +=torch.eq(top5_pred, labels_relize).sum().float().item()
             correct += (predicted == labels).sum().item()
-            
-        if (100 * correct / total) > 93:
-                pred_best = (100 * correct / total)
-                open('./final_result/acc:{:.4f}_split{}_dim{}_bit{}_'.format((100 * correct / total),args.split,args.hid_dim,args.bit)+ args.load[21:],'w').close()
-                return 1
-                
+                            
         print('Accuracy of the network on the 10000 test images: {} %'.format(100 * correct / total),'top5: {} %'.format(100* correct_top5/total))
-        return 0
 
 
       
