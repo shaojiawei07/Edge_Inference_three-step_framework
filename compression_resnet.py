@@ -246,7 +246,7 @@ class split_resnet4(nn.Module):
             selected_emb = self.weight.t()[argmin.detach(),:]
             regular_term = F.mse_loss(selected_emb,output_tmp.detach())
 
-        output = self.elu(self.decode1(output))
+        output = self.elu(self.decode1(output_emb))
         output = self.dropout(output)
         output = self.elu(self.decode2(output))
 
@@ -309,7 +309,7 @@ class split_resnet5(nn.Module):
             selected_emb = self.weight.t()[argmin.detach(),:]
             regular_term = F.mse_loss(selected_emb,output_tmp.detach())
 
-        output = self.elu(self.decode2(output))
+        output = self.elu(self.decode2(output_emb))
 
         output = self.resnet.fc(output)
         
