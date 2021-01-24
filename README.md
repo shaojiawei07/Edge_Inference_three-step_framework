@@ -37,10 +37,14 @@ CIFAR-10
 
 ```
 @article{shao2020communication,
-  title={Communication-Computation Trade-Off in Resource-Constrained Edge Inference},
+  title={Communication-computation trade-off in resource-constrained edge inference},
   author={Shao, Jiawei and Zhang, Jun},
-  journal={arXiv preprint arXiv:2006.02166},
-  year={2020}
+  journal={IEEE Communications Magazine},
+  volume={58},
+  number={12},
+  pages={20--26},
+  year={2020},
+  publisher={IEEE}
 }
 ```
 
